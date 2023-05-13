@@ -19,7 +19,7 @@ export const getMongoConfig = async (
 //   '/menu';
 
 const getMongoString = (configService: ConfigService) =>
-  'mongodb+srv://admin:admin@cluster0.t8s5oxw.mongodb.net/';
+  'mongodb+srv://admin:admin@cluster0.t8s5oxw.mongodb.net/menu';
 
 const getMongoOptions = () => ({
   useNewUrlParser: true,
