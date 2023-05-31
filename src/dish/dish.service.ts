@@ -6,6 +6,7 @@ import { FilesService } from 'src/files/files.service';
 import { DishModel } from './dish.model';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { FindDishDto } from './dto/find-dish.dto';
+import { MenuService } from 'src/menu/menu.service';
 
 @Injectable()
 export class DishService {
@@ -13,18 +14,45 @@ export class DishService {
     @InjectModel(DishModel)
     private readonly dishModel: ModelType<DishModel>,
     private readonly fileService: FilesService,
+    private readonly menuService: MenuService,
   ) {}
 
-  async create(dto: CreateDishDto): Promise<DocumentType<DishModel>> {
+  async create(dto: CreateDishDto) {
     let photo;
     if (dto?.photo) {
       const image = await this.fileService.saveFiles([dto.photo]);
       photo = image[0];
     }
-    return this.dishModel.create({
+
+    const menu = await this.menuService.findOne(dto.menuId);
+    if (!menu) {
+      throw new Error('Menu not found');
+    }
+
+    const category = menu.categories.find(
+      (category) => category._id.toString() === dto.categoryId,
+    );
+
+    if (!category) {
+      throw new Error('category not found');
+    }
+
+    const createdDish = await this.dishModel.create({
       ...dto,
       photo,
     });
+
+    category.dishes.push(createdDish);
+
+    await this.menuService.updateById(dto.menuId, {
+      categories: [category],
+    });
+
+    // return this.dishModel.create({
+    //   ...dto,
+    //   photo,
+    // });
+    return createdDish;
   }
 
   async findById(id: string) {

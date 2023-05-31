@@ -12,11 +12,7 @@ export const getMongoConfig = async (
 };
 
 // const getMongoString = (configService: ConfigService) =>
-//   'mongodb://' +
-//   configService.get('MONGO_HOST') +
-//   ':' +
-//   configService.get('MONGO_PORT') +
-//   '/menu';
+//   'mongodb://127.0.0.1:27017';
 
 const getMongoString = (configService: ConfigService) =>
   'mongodb+srv://admin:admin@cluster0.t8s5oxw.mongodb.net/menu';

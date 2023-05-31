@@ -20,11 +20,15 @@ class Dish {
 }
 
 export class Category {
+  // @prop()
+  // _id: string;
+
   @prop()
   name: string;
 
   @prop({ type: () => [Dish] })
   dishes: Dish[];
+  _id: string;
 }
 
 export interface MenuModel extends Base {}

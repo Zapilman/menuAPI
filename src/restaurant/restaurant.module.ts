@@ -4,6 +4,7 @@ import { FilesModule } from 'src/files/files.module';
 import { RestaurantController } from './restaurant.controller';
 import { RestaurantModel } from './restaurant.model';
 import { RestaurantService } from './restaurant.service';
+import { TelegramModule } from 'src/telegram/telegram.module';
 @Module({
   controllers: [RestaurantController],
   imports: [
@@ -14,6 +15,7 @@ import { RestaurantService } from './restaurant.service';
       },
     ]),
     FilesModule,
+    // TelegramModule,
   ],
   providers: [RestaurantService],
 })

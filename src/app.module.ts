@@ -8,6 +8,9 @@ import { getMongoConfig } from './configs/mongo.config';
 import { FilesModule } from './files/files.module';
 import { MenuModule } from './menu/menu.module';
 import { RestaurantModule } from './restaurant/restaurant.module';
+import { TelegrafModule } from 'nestjs-telegraf';
+import { getTelegrafConfig } from './configs/telegraf.config';
+import { ReviewModule } from './review/review.module';
 
 @Module({
   imports: [
@@ -17,10 +20,16 @@ import { RestaurantModule } from './restaurant/restaurant.module';
       inject: [ConfigService],
       useFactory: getMongoConfig,
     }),
+    // TelegrafModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: getTelegrafConfig,
+    // }),
     AuthModule,
     RestaurantModule,
     MenuModule,
     FilesModule,
+    // ReviewModule,
   ],
   controllers: [AppController],
   providers: [AppService],

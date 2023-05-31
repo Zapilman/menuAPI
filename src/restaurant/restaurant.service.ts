@@ -6,23 +6,28 @@ import { FilesService } from 'src/files/files.service';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { FindRestaurantDto } from './dto/find-restaurant.dto';
 import { RestaurantModel } from './restaurant.model';
+import { TelegramService } from 'src/telegram/telegram.service';
 
 @Injectable()
 export class RestaurantService {
   constructor(
     @InjectModel(RestaurantModel)
     private readonly restaurantModel: ModelType<RestaurantModel>,
-    private readonly fileService: FilesService,
+    private readonly fileService: FilesService, // private readonly telegramService: TelegramService,
   ) {}
 
   async create(
     dto: CreateRestaurantDto,
   ): Promise<DocumentType<RestaurantModel>> {
-    const image = await this.fileService.saveFiles([dto.photo]);
-    return this.restaurantModel.create({ ...dto, photo: image[0] });
+    // const image = await this.fileService.saveFiles([dto.photo]);
+    // await this.telegramService.sendMessage('created');
+    // return this.restaurantModel.create({ ...dto, photo: image[0] });
+    return this.restaurantModel.create(dto);
   }
 
-  async findById(id: string) {
+  async findById(
+    id: string,
+  ): Promise<(RestaurantModel & Record<string, any>) | null> {
     return this.restaurantModel.findById(id).exec();
   }
 
@@ -32,7 +37,9 @@ export class RestaurantService {
       .exec();
   }
 
-  async findWithMenu(dto: FindRestaurantDto) {
+  async findWithMenu(
+    dto: FindRestaurantDto,
+  ): Promise<(RestaurantModel & Record<string, any>)[] | null> {
     return this.restaurantModel
       .aggregate([
         {
@@ -45,9 +52,9 @@ export class RestaurantService {
             _id: 1,
           },
         },
-        {
-          $limit: dto.limit,
-        },
+        // {
+        //   $limit: dto.limit,
+        // },
         {
           $lookup: {
             from: 'Menu',
@@ -67,6 +74,11 @@ export class RestaurantService {
           $project: {
             name: 1,
             menu: 1,
+            address: 1,
+            phoneNumber: 1,
+            workingHours: 1,
+            photo: 1,
+            description: 1,
           },
         },
       ])

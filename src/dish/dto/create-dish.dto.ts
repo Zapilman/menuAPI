@@ -5,4 +5,5 @@ export class CreateDishDto {
   weight?: string;
   photo?: Express.Multer.File;
   categoryId: string;
+  menuId: string;
 }

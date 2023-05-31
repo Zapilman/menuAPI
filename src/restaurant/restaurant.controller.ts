@@ -28,7 +28,7 @@ export class RestaurantController {
       id,
       limit: body.limit,
     });
-    return restaurant[0];
+    return restaurant?.[0] || [];
   }
 
   @UseInterceptors(FileInterceptor('photo'))

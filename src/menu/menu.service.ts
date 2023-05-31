@@ -3,7 +3,7 @@ import { ModelType } from '@typegoose/typegoose/lib/types';
 import { InjectModel } from 'nestjs-typegoose';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
-import { MenuModel } from './menu.model';
+import { Category, MenuModel } from './menu.model';
 
 @Injectable()
 export class MenuService {
@@ -20,12 +20,36 @@ export class MenuService {
     return this.menuModel.find({});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} menu`;
+  findOne(id: string) {
+    return this.menuModel.findById(id).exec();
   }
 
-  update(id: number, updateMenuDto: UpdateMenuDto) {
-    return `This action updates a #${id} menu`;
+  // find(asda: any) {
+  //   return this.menuModel.find({categories}).exec();
+  // }
+
+  async addCategory(id: string, category: Category[]) {
+    console.log(
+      '🚀 ~ file: menu.service.ts:32 ~ MenuService ~ addCategory ~ category:',
+      category,
+    );
+    const menu = await this.findOne(id);
+    if (!menu) {
+      return null;
+    }
+    return this.menuModel
+      .findByIdAndUpdate(
+        id,
+        { categories: [...menu.categories, ...category] },
+        { new: true },
+      )
+      .exec();
+  }
+
+  updateById(id: string, updateMenuDto: UpdateMenuDto) {
+    return this.menuModel
+      .findByIdAndUpdate(id, updateMenuDto, { new: true })
+      .exec();
   }
 
   remove(id: number) {
